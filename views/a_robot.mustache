@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8"/>
+    <title> Served by Node</title>
+</head>
+  <body id="personalbody">
+    {{ #robot }}
+    <section id="personalsection">
+      <img id="personalimg" src="{{ avatar }}" alt="{{ name }}">
+      <h2>{{name}}</h2>
+      <p>{{address.city}} , {{address.country}}
+      {{ #job }}{{ job }}{{ /job }}{{ ^job }}
+      <p id="looking">Available for hire</p>{{ /job }} {{company}}
+      <br>{{email}} | {{phone}}</p>
+      <strong>Education: </strong><li>{{university}}</li></h2>
+      <br>
+      <strong>Skills: </strong>{{ #skills }}<li>{{.}}</li>{{/ skills }}
+      {{ /robot }}
+    </section>
+    <br>
+    <a href ="http://localhost:3000/index">HOME</a>
+  </body>
+</html>

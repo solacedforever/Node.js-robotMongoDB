@@ -1,0 +1,22 @@
+/*#users {
+align-items:center;
+display:flex;
+flex-wrap:wrap;
+}
+#robotprofile {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+}*/
+#looking {
+  color:red;
+}
+#personalsection {
+  border:2px solid black;
+  margin-right:900px;
+
+}
+#personalimg {
+  border:2px solid lightgrey;
+  border-radius:200px;
+}
