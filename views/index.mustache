@@ -6,12 +6,14 @@
     <title> Served by Node</title>
 </head>
   <body id="indexbody">
+    <a href="/unemployed">FOR HIRE</a>
+    <a href="/">HOME</a>
     <section id=indexsection>
         <div class=user>
           <div class =users>
             {{ #users }}
             <div id = "robotprofile">
-            <a href ="http://localhost:3000/robot/{{username}}">
+            <a href ="/a_robot/{{username}}">
             <img src="{{ avatar }}" alt="{{ name }}"></a>
             <h1>{{name}}</h1>
             <p>{{ #job }}

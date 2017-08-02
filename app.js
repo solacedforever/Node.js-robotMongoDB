@@ -1,9 +1,21 @@
-var MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
+const express = require('express');
+const app = express();
+const mustacheExpress = require ('mustache-express');
+const url = 'mongodb://localhost:27017/robotdata'
 
-var url = 'mongodb://localhost:27017/robotdata'
-
-
-var findRobots = function(db, callback) {
+var findSingleRobot = function(db, callback) {
+  // Get the documents collection
+  var collection = db.collection('robotdata');
+  // Insert some documents
+  collection
+    .find({ "username": "" })
+    .toArray(function(err, result) {
+      console.log("found ", result.length, "robots")
+      callback(result);
+  });
+}
+var findRobotJobs = function(db, callback) {
   // Get the documents collection
   var collection = db.collection('robotdata');
   // Insert some documents
@@ -14,37 +26,55 @@ var findRobots = function(db, callback) {
       callback(result);
   });
 }
+var findAllRobots = function(db, callback) {
+  // Get the documents collection
+  var collection = db.collection('robotdata');
+  // Insert some documents
+  collection
+    .find()
+    .toArray(function(err, result) {
+      console.log("found ", result.length, "robots")
+      callback(result);
+  });
+}
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
   console.log('error?', err);
   console.log("Connected successfully to server");
 
-  findRobots(db, function() {
+  findAllRobots(db, function() {
     console.log('search is done');
     db.close();
   });
 });
-const express = require('express');
-const app = express();
-
-const mustacheExpress = require ('mustache-express');
-
 app.use(express.static('public'));
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 app.set('views', __dirname + '/views');
 
-app.get('/index', function (request, response) {
-  response.render('index', {collection.find});
-});
-app.get('/a_robot', function (request, response) {
-  response.render('a_robot', {collection.find});
-});
-app.get('/robot/:username', function (request, response) {
-  let robot = data.users.find(function(slave) {
-    return slave.username.toLowerCase() === request.params.username;
+app.get('/', function (req, res) {
+  MongoClient.connect(url, function(err,db){
+    findAllRobots(db, function(result){
+      res.render('index',{users:result})
+    });
   });
-  response.render('a_robot' , {robot: robot});
+});
+app.get('/unemployed', function (req, res) {
+  MongoClient.connect(url, function(err,db){
+    findRobotJobs(db,function(result){
+      res.render('index',{users:result})
+    });
+  });
+});
+app.get('/a_robot/:username', function (req, res) {
+  MongoClient.connect(url,function(err,db){
+    findAllRobots(db,function(result){
+        let robot = result.find(function(member) {
+          return member.username.toLowerCase() === req.params.username;
+        });
+        res.render('a_robot' , {robot});
+    });
+  });
 });
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
