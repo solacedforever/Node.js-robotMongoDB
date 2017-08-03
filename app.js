@@ -4,14 +4,12 @@ const app = express();
 const mustacheExpress = require ('mustache-express');
 const url = 'mongodb://localhost:27017/robotdata'
 
-var findSingleRobot = function(db, callback) {
+var findSingleRobot = function(db,username, callback) {
   // Get the documents collection
   var collection = db.collection('robotdata');
   // Insert some documents
   collection
-    .find({ "username": "" })
-    .toArray(function(err, result) {
-      console.log("found ", result.length, "robots")
+  .findOne( { username : username }, function(err, result) {
       callback(result);
   });
 }
@@ -22,7 +20,7 @@ var findRobotJobs = function(db, callback) {
   collection
     .find({ "job": null })
     .toArray(function(err, result) {
-      console.log("found ", result.length, "robots")
+      console.log("found ", result.length, "robots with no jobs")
       callback(result);
   });
 }
@@ -68,11 +66,12 @@ app.get('/unemployed', function (req, res) {
 });
 app.get('/a_robot/:username', function (req, res) {
   MongoClient.connect(url,function(err,db){
-    findAllRobots(db,function(result){
-        let robot = result.find(function(member) {
-          return member.username.toLowerCase() === req.params.username;
-        });
-        res.render('a_robot' , {robot});
+    findSingleRobot(db, req.params.username, function(result){
+        // let robot = result.find(function(member) {
+        //   return member.username.toLowerCase() === req.params.username;
+        // });
+        console.log('robots name '  + result.name) ;
+        res.render('a_robot' , {robot:result});
     });
   });
 });
